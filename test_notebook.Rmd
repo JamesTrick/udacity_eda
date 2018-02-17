@@ -1,0 +1,93 @@
+---
+title: "Prosper Loan Analysis"
+author: "James Malcolm"
+output:
+  html_document:
+    df_print: paged
+---
+
+This Markdown and repo is dedicated to exploring Prosper Loan data to answer
+the following questions:
+* Who uses Prosper/Borrowers
+
+
+
+```{r}
+# Load Packages needed
+library(ggplot2)
+
+```
+
+Now we read the data set in, and check out a few statistics.
+```{r}
+loans <- read.csv('./data/prosperLoanData.csv')
+
+# View shape of data
+dim(loans)
+```
+
+```{r}
+str(loans)
+```
+
+I note, that Terms is not represented as a factor. However we know from Prosper
+that Terms of Loans are only 12, 36, or 60 months. So we change this column to
+be a Factor data type.
+
+```{r}
+# Set Term data type to be a factor
+loans$Term <- factor(loans$Term,
+                     levels = c(12,36,60),
+                     ordered = TRUE)
+```
+
+An initial plot that I want to make is to simply view the distribution of
+loan amounts that have been issued. I do this using a Histogram.
+
+```{r}
+# Plot histogram of Loan amounts
+ggplot(aes(x = LoanOriginalAmount), data = loans) + 
+  geom_histogram(binwidth = 1000) +
+  xlab('Original Loan Amount (USD)') +
+  ggtitle('Histogram of original loan amount')
+```
+
+View this graph is interesting, as we can see that there are spikes in loan
+amounts at round numbers, eg $10,000, $15,000, $20,000, etc. This reflects that
+humans tend to think in round numbers as opposed to requestings loans for
+specific number, eg. $7824.
+
+We can also see that while most the majority of loans are $25,000 or less, there
+are a number of loans above this figure.
+
+A 
+method to assess wehether these are valid loans or not would be see the reason
+as to why they're getting the loan! Since however, we don't have have the
+reason, we're going to continue doing more EDA on it.
+
+```{r}
+min(loans$LoanOriginalAmount)
+max(loans$LoanOriginalAmount)
+```
+
+Further research on Prosper's Help Centre finds that Prosper only allows loans
+ranging from $2,000 to $35,000. Given we have no datapoints beyond $35,000, I'm 
+confident enough that these potential outliers abover $25,000 are legitamate 
+loans - so I won't remove or otherwise transform them.
+
+An assumption that I want to visualise is that the larger the Loan amount, the
+larger the Term would be. To view this, I create the following boxplote to
+explore the relationship of loan amounts across the three different terms 
+(12 months, 36 months and 60 months).
+
+```{r}
+ggplot(aes(x = Term, y = LoanOriginalAmount), data=loans) +
+  geom_boxplot() +
+  xlab('Term (Months)') +
+  ylab('Original Loan Amount (USD)') +
+  ggtitle('Distribution of Loan Amounts per Term')
+
+```
+
+
+
