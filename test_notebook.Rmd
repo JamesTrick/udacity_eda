@@ -13,9 +13,8 @@ the following questions:
 
 
 ```{r}
-# Load Packages needed
+# Load Packages needed --------
 library(ggplot2)
-
 ```
 
 Now we read the data set in, and check out a few statistics.
@@ -27,6 +26,7 @@ dim(loans)
 ```
 
 ```{r}
+# Print structure and datatypes ------
 str(loans)
 ```
 
@@ -89,5 +89,14 @@ ggplot(aes(x = Term, y = LoanOriginalAmount), data=loans) +
 
 ```
 
+```{r}
+summary(loans$MonthlyLoanPayment)
+
+ggplot(aes(x = MonthlyLoanPayment), data = loans) +
+  geom_histogram(binwidth = 100) +
+  coord_cartesian(xlim = c(0, 1400)) +
+  ggtitle('Monthly Loan Repayment Distribution')
+
+```
 
 
